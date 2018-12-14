@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="webtest">
+	<property name="build" value="${basedir}/build"></property>
+	<property name="build.class" value="${build}/classes"></property>
+	<property name="src" value="${basedir}/src"></property>
+	<property name="web" value="${basedir}/WebContent"></property>
+	<property name="lib" value="${web}/WEB-INF/lib"></property>
+	<property name="webserver" value="D:\tomcat 7.0"></property>
+	
+<!-- 	外部资源包的位置 -->
+	<path id="classpath">
+		<pathelement location="${src}"></pathelement>
+		<fileset dir="${lib}" includes="***.jar"></fileset>	
+	</path>
+	
+<!-- 	删除classes -->
+	<target name="clean" description="删除">
+		<echo message="删除目录"></echo>
+		<delete dir="${build}"></delete>
+	</target>
+	
+<!-- 	创建临时目录 -->
+	<target name="init" description="创建目录" depends="clean">
+		<echo message="创建目录"></echo>
+		<mkdir dir="${build.class}"></mkdir>
+	</target>
+	
+<!-- 	编译java源文件 -->
+	<target name="compile" description="编译文件" depends="init">
+		<echo message="编译文件"></echo>
+		<javac srcdir="${src}" destdir="${build.class}">
+			<classpath refid="classpath"></classpath>
+			<compilerarg line="-encoding UTF-8"></compilerarg>
+		</javac>
+	</target>
+	
+<!-- 	停止tomcat -->
+	<target name="stop_tomcat">
+		<echo>停止tomcat</echo>
+		<exec executable="cmd" dir="${webserver}/bin" failonerror="false" append="true">
+			<env key="CATALINA_HOME" path="${webserver}"></env>
+			<arg value="/c shutdown.bat"></arg>
+		</exec>
+	</target>
+	
+<!-- 	重启tomcat -->
+	<target name="start_tomcat" depends="stop_tomcat">
+		<echo>启动tomcat</echo>
+		<exec executable="cmd" dir="${webserver}/bin" failonerror="false" append="true">
+			<env key="CATALINA_HOME" path="${webserver}"></env>
+			<arg value="/c startup.bat"></arg>
+		</exec>
+	</target>
+	
+	
+	
+</project>
